@@ -8,7 +8,8 @@ import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
-import ImageIcon from '@mui/icons-material/Image';
+import Typography from '@mui/material/Typography';
+import {AdminLayout} from "@/components/layout";
 
 export interface UserListProps {
   users: any[]
@@ -18,27 +19,40 @@ const UserDetail: React.FC<any>  = (props: UserListProps) => {
     return props.users && props.users.map(user => {
       return (
         <div key={user?.id}>
-          <ListItem>
+          <ListItem alignItems="flex-start">
             <ListItemAvatar>
-              <Avatar>
-                <ImageIcon />
-              </Avatar>
+              <Avatar alt={user?.name} src={'@/assets/images/1608636809_1.jpg'} />
             </ListItemAvatar>
-            <ListItemText primary={user?.name} secondary={user?.email} />
+            <ListItemText
+              primary={user?.name}
+              secondary={
+                <React.Fragment>
+                  <Typography
+                    sx={{ display: 'inline' }}
+                    component="span"
+                    variant="body2"
+                    color="text.primary"
+                  >
+                    <Link href={`/users/${user?.id}`}>
+                      <a>
+                        {user?.email}
+                      </a>
+                    </Link>
+                  </Typography>
+                </React.Fragment>
+              }
+            />
           </ListItem>
-          <div>
-            <Link href={`/users/${user?.id}`}>
-              <a> go to detail</a>
-            </Link>
-          </div>
         </div>
       )
     })
   }, [props.users])
   return (
-    <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
-      {renderUser()}
-    </List>
+    <AdminLayout>
+      <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+        {renderUser()}
+      </List>
+    </AdminLayout>
   )
 }
 

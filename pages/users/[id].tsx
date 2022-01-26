@@ -5,13 +5,13 @@ import Image from "next/image";
 import TestImage from '../../assets/images/1608636809_1.jpg';
 import {GetStaticPaths, GetStaticProps, GetStaticPropsContext} from "next";
 import axios from "axios";
+import ErrorPage from 'next/error'
 
 interface UserDetailProp {
   user: any
 }
 
 const UserDetail: React.FC<UserDetailProp>  = (props ) => {
-  console.log(props)
   const { user } = props
   const router = useRouter()
   // const { id } = router.query;
@@ -34,6 +34,10 @@ const UserDetail: React.FC<UserDetailProp>  = (props ) => {
   const handleBack = useCallback(() => {
     return router.back()
   }, [router])
+
+  if (router.isFallback) {
+    return <div style={{ fontSize: 50, textAlign: 'center' }}>Loading....</div>
+  }
 
   return (
     <div>
@@ -69,7 +73,8 @@ export const getStaticPaths: GetStaticPaths = async () => {
     paths: response.data.map((user: any) => ({
       params: { id: user?.id}
     })),
-    fallback: false
+    // fallback: false // static site generation
+    fallback: true
   }
 }
 
@@ -84,7 +89,9 @@ export const getStaticProps: GetStaticProps<UserDetailProp> = async (context: Ge
       'Authorization': `Bearer ${token}`
     }
   })
-  const dataUserResponse =  response.data
+
+  const dataUserResponse = response.data
+
   return {
     props: {
       user: {
@@ -94,7 +101,8 @@ export const getStaticProps: GetStaticProps<UserDetailProp> = async (context: Ge
         createdAt: dataUserResponse?.createdAt,
         updatedAt: dataUserResponse?.updatedAt,
       }
-    }
+    },
+    revalidate: 5, // quá 5s sẽ đi cập nhập lại dữ liệu - Incremental Static Regeneration
   }
 }
 
