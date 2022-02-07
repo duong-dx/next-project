@@ -57,7 +57,7 @@ export async function getServerSideProps (context: GetServerSidePropsContext) {
   if (!userId) return { props: { query: context.query } }
 
   const token: string = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiZHVvbmciLCJlbWFpbCI6Inh1YW5kdW9uZy5rbWFAZ21haWwuY29tIiwiaWQiOiIxMiIsImlhdCI6MTY0MzEyNDU2MCwiZXhwIjoxNjUxNzY0NTYwfQ.f9tD4_GDDoaItI5XqGCN4PEMCfHo5kzi20xpDwyyX9Q';
-  const response: any = await axios.get(`http://localhost:3005/users/${userId}`, {
+  const response: any = await axios.get(`http://localhost:3005/api/users/${userId}`, {
     headers: {
       'Authorization': `Bearer ${token}`
     }
