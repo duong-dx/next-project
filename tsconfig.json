@@ -20,6 +20,7 @@
       "@/css/*": ["./css/*"],
       "@/assets/*": ["./assets/*"],
       "@/models/*": ["./models/*"],
+      "@/api-client/*": ["./api-client/*"],
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],

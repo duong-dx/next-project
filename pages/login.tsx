@@ -1,23 +1,38 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
-import {Button} from "@mui/material";
-export interface IInitialValue {
-  email: string,
-  password: string,
-}
+import {Button, Alert, Stack} from "@mui/material";
+import {LoginPayload} from "@/models/auth";
+import authAPI from "@/api-client/auth-api";
+import {useRouter} from "next/router";
+import {useEffect} from "react";
+import Cookies from "cookies";
 
 export default function StateTextFields() {
-  const [value, setValue] = React.useState<IInitialValue>({
+  const [value, setValue] = React.useState<LoginPayload>({
     email: '',
     password: '',
   });
+
+  const router = useRouter()
+
+  const [loginStatus, setLoginStatus] = React.useState<boolean>(false)
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setValue({
       ...value,
       [event.target.name]: event.target.value,
     });
   };
+
+  const handleLogin = async () => {
+    try {
+      await authAPI.login(value)
+
+      return router.push('/users')
+    } catch (e) {
+      setLoginStatus(true)
+    }
+  }
 
   return (
     <div style={{
@@ -29,6 +44,11 @@ export default function StateTextFields() {
       <h2 style={{
         textAlign: 'center'
       }}>Login Form</h2>
+      {
+        loginStatus && <Stack sx={{ width: '100%' }} spacing={2}>
+          <Alert severity="error">Login fail</Alert>
+        </Stack>
+      }
         <div>
           <TextField
             style={{
@@ -61,7 +81,7 @@ export default function StateTextFields() {
           display: 'flex',
           justifyContent: 'center'
         }}>
-        <Button onClick={() => {}} variant="outlined">Login</Button>
+        <Button onClick={handleLogin} variant="outlined">Login</Button>
       </div>
     </div>
   );

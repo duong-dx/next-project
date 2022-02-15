@@ -38,6 +38,9 @@ export default function handle(req: NextApiRequest, res: NextApiResponse<Data>) 
           const { token } = JSON.parse(body)
           console.log(token, 'my token');
 
+          if (!token) {
+            throw new Error('Username or password is incorrect');
+          }
           // convert and add token to cookies
           const cookies = new Cookies(req, res, { secure: process.env.NODE_ENV !== 'development'});
           cookies.set('access_token', token, {
