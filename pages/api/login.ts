@@ -35,8 +35,8 @@ export default function handle(req: NextApiRequest, res: NextApiResponse<Data>) 
 
       proxyRes.on('end', () => {
         try {
-          const { token } = JSON.parse(body)
-          console.log(token, 'my token');
+          const { token, expiresIn } = JSON.parse(body)
+          console.log(token, expiresIn, 'my token');
 
           if (!token) {
             throw new Error('Username or password is incorrect');
@@ -46,7 +46,7 @@ export default function handle(req: NextApiRequest, res: NextApiResponse<Data>) 
           cookies.set('access_token', token, {
             httpOnly: true,
             sameSite: 'lax',
-            // expires:
+            expires: new Date(expiresIn),
           })
 
           ;(res as NextApiResponse).status(200).json({message: 'login success'})

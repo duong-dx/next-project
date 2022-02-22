@@ -1,20 +1,27 @@
 import React, {useCallback} from 'react';
-import {useRouter} from "next/router";
 import Link from "next/link";
 import {GetStaticProps, GetStaticPropsContext} from "next";
 import axios from "axios";
-import List from '@mui/material/List';
+import {List, Button} from '@mui/material';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 import {AdminLayout} from "@/components/layout";
+import authAPI from "@/api-client/auth-api";
 
 export interface UserListProps {
   users: any[]
 }
 const UserDetail: React.FC<any>  = (props: UserListProps) => {
+  const handleLogout = async () => {
+    // try {
+      await authAPI.logout()
+    // } catch (error) {
+    //   console.log(error)
+    // }
+  }
   const renderUser = useCallback(() => {
     return props.users && props.users.map(user => {
       return (
@@ -49,6 +56,7 @@ const UserDetail: React.FC<any>  = (props: UserListProps) => {
   }, [props.users])
   return (
     <AdminLayout>
+      <Button onClick={handleLogout}>Logout</Button>
       <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
         {renderUser()}
       </List>

@@ -2,17 +2,19 @@ import * as React from 'react';
 import TextField from '@mui/material/TextField';
 import {Button, Alert, Stack} from "@mui/material";
 import {LoginPayload} from "@/models/auth";
-import authAPI from "@/api-client/auth-api";
 import {useRouter} from "next/router";
-import {useEffect} from "react";
-import Cookies from "cookies";
+import {useAuth} from "@/hooks/index";
 
-export default function StateTextFields() {
+export default function Login() {
   const [value, setValue] = React.useState<LoginPayload>({
-    email: '',
-    password: '',
+    email: 'xuanduong.kma@gmail.com',
+    password: '123456',
   });
 
+  const { profile, login } = useAuth({
+    revalidateOnMount: false,
+  })
+  console.log(profile);
   const router = useRouter()
 
   const [loginStatus, setLoginStatus] = React.useState<boolean>(false)
@@ -26,9 +28,14 @@ export default function StateTextFields() {
 
   const handleLogin = async () => {
     try {
-      await authAPI.login(value)
+      await login(value)
 
-      return router.push('/users')
+      const url: string = String(router.query?.ref) || '/swr';
+
+      return router.push({
+        pathname: url
+      })
+
     } catch (e) {
       setLoginStatus(true)
     }
